@@ -12,7 +12,7 @@ app.add_middleware(
 
 data_store = {}
 
-@app.post("/data")
+@app.post("/update")
 def receive_data(data: dict):
     machine = data["machine"]
     data_store[machine] = data
