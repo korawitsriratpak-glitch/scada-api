@@ -2,14 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from influxdb_client import InfluxDBClient
 
-app = FastAPI():
-url = "https://us-east-1-1.aws.cloud2.influxdata.com"
-token = "XMGZj4P_yBnZ_9uOeHJj2tTvLGckFsIIaBPR_E_2V3d6yZZ8pqnREiQL9iBnHL2OxxrEmuFjZo4LbgpGyCyRJQ=="
-org = "Dev"
-bucket = "plc_cloud"
-
-client = InfluxDBClient(url=url, token=token, org=org)
-query_api = client.query_api()
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +11,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# realtime
 data_store = {}
 
 @app.post("/update")
@@ -29,7 +23,18 @@ def receive_data(data: dict):
 @app.get("/data")
 def get_data():
     return data_store
-    
+
+
+# Influx config
+url = "https://us-east-1-1.aws.cloud2.influxdata.com"
+token = "XMGZj4P_yBnZ_9uOeHJj2tTvLGckFsIIaBPR_E_2V3d6yZZ8pqnREiQL9iBnHL2OxxrEmuFjZo4LbgpGyCyRJQ=="
+org = "Dev"
+bucket = "plc_cloud"
+
+client = InfluxDBClient(url=url, token=token, org=org)
+query_api = client.query_api()
+
+
 @app.get("/history")
 def get_history(machine: str = "Piller1"):
 
