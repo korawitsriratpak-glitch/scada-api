@@ -33,14 +33,14 @@ def get_data():
 @app.get("/history")
 def get_history(machine: str = "Piller1"):
 
-    query = f'''
+    query = f"""
     from(bucket: "{bucket}")
       |> range(start: -12h)
       |> filter(fn: (r) => r._measurement == "scada_test")
       |> filter(fn: (r) => r._field == "pressure")
       |> filter(fn: (r) => r.machine == "{machine}")
       |> sort(columns: ["_time"])
-    '''
+    """
 
     result = query_api.query(query)
 
