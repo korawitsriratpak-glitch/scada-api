@@ -40,10 +40,10 @@ def get_history(machine: str = "Piller1"):
 
     query = f"""
     from(bucket: "{bucket}")
-      |> range(start: -12h)
+      |> range(start: -24h)
       |> filter(fn: (r) => r._measurement == "scada_tef4")
       |> filter(fn: (r) => r._field == "pressure")
-      |> filter(fn: (r) => r.machine == "{machine}")
+      |> filter(fn: (r) => r["machine"] == "{machine}")
       |> sort(columns: ["_time"])
     """
 
