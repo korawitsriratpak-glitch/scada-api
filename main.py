@@ -36,13 +36,14 @@ query_api = client.query_api()
 
 
 @app.get("/history")
-def get_history(machine: str = "Piller1"):
+def get_history(machine: str = Query(...)):
 
     query = f"""
     from(bucket: "{bucket}")
       |> range(start: -24h)
-      |> filter(fn: (r) => r._measurement == "scada_tef4")
+      |> filter(fn: (r) => r._measurement == "scada_tef")
       |> filter(fn: (r) => r._field == "pressure")
+      |> filter(fn: (r) => r.machine == "{machine}")
       
       |> sort(columns: ["_time"])
     """
