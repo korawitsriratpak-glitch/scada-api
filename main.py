@@ -37,16 +37,17 @@ query_api = client.query_api()
 
 
 @app.get("/history")
-def get_history(machine: str = Query(...)):
-
+def get_history(
+    machine: str = Query(...),
+    range: str = Query("1m") # 👈 เปลี่ยนตรงนี้
+):
     query = f"""
     from(bucket: "{bucket}")
-      |> range(start: -24h)
-      |> filter(fn: (r) => r._measurement == "scada_tef")
-      |> filter(fn: (r) => r._field == "pressure")
-      |> filter(fn: (r) => r.machine == "{machine}")
-      
-      |> sort(columns: ["_time"])
+    |> range(start: -{range})
+    |> filter(fn: (r) => r._measurement == "scada_tef")
+    |> filter(fn: (r) => r._field == "pressure")
+    |> filter(fn: (r) => r.machine == "{machine}")
+    |> sort(columns: ["_time"])
     """
 
     result = query_api.query(query)
